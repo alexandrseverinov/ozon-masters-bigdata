@@ -26,11 +26,10 @@ except:
 logging.info(f"TRUE PATH {true_path}")
 logging.info(f"PRED PATH {pred_path}")
 
-
-#open true path
+# open true path
 df_true = pd.read_csv(true_path, header=None, index_col=0, names=["id", "true"])
 
-#open pred_path
+# open pred_path
 df_pred = pd.read_csv(pred_path, header=None, index_col=0, names=["id", "pred"])
 
 len_true = len(df_true)
@@ -43,7 +42,7 @@ assert len_true == len_pred, f"Number of records differ in true and predicted se
 
 df = df_true.join(df_pred)
 len_df = len(df)
-assert len_true == len_df, f"Kombined true and pred has different number of records: {len_df}"
+assert len_true == len_df, f"Combined true and pred has different number of records: {len_df}"
 
 score = mean_absolute_error(df['true'], df['pred'])
 

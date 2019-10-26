@@ -1,6 +1,6 @@
 #!/opt/conda/envs/dsenv/bin/python
 
-# This is a MAE scorer
+# This is a LogLoss scorer
 
 import sys
 import os

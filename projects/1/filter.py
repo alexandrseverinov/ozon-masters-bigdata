@@ -7,6 +7,7 @@ import logging
 
 sys.path.append('.')
 from model import fields
+from filter_cond import filter_cond
 
 
 # Init the logger
@@ -24,10 +25,6 @@ if len(filter_cond_files) != 1:
     sys.exit(1)
 
 exec(open(filter_cond_files[0]).read())
-
-# dataset fields
-# fields = """doc_id,hotel_name,hotel_url,street,city,state,country,zip,class,price,
-# num_reviews,CLEANLINESS,ROOM,SERVICE,LOCATION,VALUE,COMFORT,overall_ratingsource""".replace("\n",'').split(",")
 
 # Optional argument
 # If +field option is given, output the id (always first record) and the given field
@@ -57,7 +54,7 @@ for line in sys.stdin:
 
     # unpack into a tuple/dict
     values = line.rstrip().split(',')
-    hotel_record = dict(zip(fields, values))  # Hotel(values)
+    hotel_record = dict(zip(fields, values))
 
     # apply filter conditions
     if filter_cond(hotel_record):

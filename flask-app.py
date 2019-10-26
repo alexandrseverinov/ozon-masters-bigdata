@@ -9,17 +9,17 @@ from flask import request, abort, make_response, jsonify, send_from_directory
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def hello_world():
-    return 'Welcome!'
+    return "Welcome!"
 
 
 @app.errorhandler(404)
 def not_found(error):
-    return make_response(jsonify({'error': 'Not found'}), 404)
+    return make_response(jsonify({"error": "Not found"}), 404)
 
 
-@app.route('/sample/<int:proj_id>', methods=['POST'])
+@app.route("/sample/<int:proj_id>", methods=["POST"])
 def sample(proj_id):
     """Send sampling job 
     Params:
@@ -28,12 +28,11 @@ def sample(proj_id):
     output path - URI (hdfs or S3 or local etc)
     sampling module  - depends on the lab - MR, Hive, Spark SQL etc
     sampling condition - depends on the lab: python expression, Hive SQL etc.
-    
     """
     return exec_script(proj_id, "ozon-masters-bigdata/projects", "sample.sh", request.json)
 
 
-@app.route('/train/<int:proj_id>', methods=['POST'])
+@app.route("/train/<int:proj_id>", methods=["POST"])
 def train_model(proj_id):
     """ Train the model 
     Run a training program
@@ -68,7 +67,7 @@ def exec_script(proj_id, exec_dir, exec_file, request_json):
 
 # ? upload for checking (test sample is h(proj_id)den)
 
-@app.route('/train_results/<int:proj_id>', methods=['GET'])
+@app.route("/train_results/<int:proj_id>", methods=["GET"])
 def get_train_result(proj_id):
     """ Get JSON with metrics on test data and trained model path.
     Params:
@@ -80,20 +79,18 @@ def get_train_result(proj_id):
 #
 # Give URI to test data in HDFS or S3
 #
-@app.route('/predict/<int:proj_id>', methods=['POST'])
+@app.route("/predict/<int:proj_id>", methods=["POST"])
 def predict(proj_id):
     """ Run inference
-
     Params:
     homework number
     test data URI
     output data URI
-
     """
     return exec_script(proj_id, "ozon-masters-bigdata/projects", "predict.sh", request.json)
 
 
-@app.route('/check/<int:proj_id>', methods=['POST'])
+@app.route("/check/<int:proj_id>", methods=["POST"])
 def check(proj_id):
     """ Run a given program that calculate model metric on a test data set.
     I.e. then run inference job on test data set and save it. 
@@ -107,12 +104,11 @@ def check(proj_id):
     Params:
     homework number
     prediction  data URI
-
     """
     return
 
 
-@app.route('/model/<int:proj_id>', methods=['GET'])
+@app.route("/model/<int:proj_id>", methods=["GET"])
 def get_model_definition(proj_id):
     """Download a file.
     Download for examination
@@ -124,12 +120,12 @@ def get_model_definition(proj_id):
     print("MODEL_FILE", path)
     cwd = os.getcwd()
     print("CWD", cwd)
-    from_dir = 'ozon-masters-bigdata/projects/{}'.format(proj_id)
+    from_dir = "ozon-masters-bigdata/projects/{}".format(proj_id)
     print("FROM_DIR", from_dir)
     full_path = cwd + "/" + from_dir
     print("FULL_PATH", full_path, file=sys.stderr)
     return send_from_directory(full_path, path, as_attachment=True)
 
 
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":
+    app.run(debug=True)  # host='0.0.0.0'
