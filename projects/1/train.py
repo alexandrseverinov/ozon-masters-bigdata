@@ -8,9 +8,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from joblib import dump
 
-#
 # Import model definition
-#
 from model import model, fields
 
 
@@ -32,16 +30,12 @@ except:
 logging.info(f"TRAIN_ID {proj_id}")
 logging.info(f"TRAIN_PATH {train_path}")
 
-# Read dataset
-# fields = """doc_id,hotel_name,hotel_url,street,city,state,country,zip,class,price,
-# num_reviews,CLEANLINESS,ROOM,SERVICE,LOCATION,VALUE,COMFORT,overall_ratingsource""".replace("\n",'').split(",")
-
-read_table_opts = dict(sep=",", names=fields, index_col=False)
+read_table_opts = dict(sep="\t", names=fields, index_col=False)
 df = pd.read_table(train_path, **read_table_opts)
 
 # split train/test
 X_train, X_test, y_train, y_test = train_test_split(
-    df.iloc[:, :-1], df.iloc[:, -1], test_size=0.33, random_state=42
+    df.iloc[:, 2:], df.iloc[:, 1], test_size=0.33, random_state=42
 )
 
 # Train the model

@@ -2,7 +2,7 @@ from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split, GridSearchCV
 
 
@@ -16,12 +16,12 @@ fields = ["id", "label"] + numeric_features + categorical_features
 # We create the preprocessing pipelines for both numeric and categorical data.
 numeric_transformer = Pipeline(steps=[
     ("imputer", SimpleImputer(strategy="median")),
-    # ('scaler', StandardScaler())
+    ("scaler", StandardScaler())
 ])
 
 categorical_transformer = Pipeline(steps=[
-    ('imputer', SimpleImputer(strategy="constant", fill_value="missing")),
-    ('onehot', OneHotEncoder(handle_unknown="ignore"))
+    ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
+    ("onehot", OneHotEncoder(handle_unknown="ignore"))
 ])
 
 preprocessor = ColumnTransformer(
@@ -34,5 +34,5 @@ preprocessor = ColumnTransformer(
 # Now we have a full prediction pipeline.
 model = Pipeline(steps=[
     ("preprocessor", preprocessor),
-    ("linearregression", LinearRegression())
+    ("linearregression", LogisticRegression())
 ])
