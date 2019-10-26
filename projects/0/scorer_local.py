@@ -1,26 +1,22 @@
 #!/opt/conda/envs/dsenv/bin/python
 
-#
 # This is a MAE scorer
-#
 
 import sys
 import os
 import logging
+
 import pandas as pd
 from sklearn.metrics import mean_absolute_error
 
-#
+
 # Init the logger
-#
 logging.basicConfig(level=logging.DEBUG)
 logging.info("CURRENT_DIR {}".format(os.getcwd()))
 logging.info("SCRIPT CALLED AS {}".format(sys.argv[0]))
 logging.info("ARGS {}".format(sys.argv[1:]))
 
-#
 # Read true values
-#
 try:
     true_path, pred_path = sys.argv[1:]
 except:

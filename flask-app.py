@@ -1,6 +1,5 @@
-#
 # Flask app for Ozonmasters
-#
+
 import os
 import sys
 import json
@@ -9,13 +8,16 @@ from flask import request, abort, make_response, jsonify, send_from_directory
 
 app = Flask(__name__)
 
+
 @app.route('/')
 def hello_world():
     return 'Welcome!'
 
+
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found'}), 404)
+
 
 @app.route('/sample/<int:proj_id>', methods=['POST'])
 def sample(proj_id):
@@ -30,10 +32,11 @@ def sample(proj_id):
     """
     return exec_script(proj_id, "ozon-masters-bigdata/projects", "sample.sh", request.json)
 
+
 @app.route('/train/<int:proj_id>', methods=['POST'])
 def train_model(proj_id):
     """ Train the model 
-    Run a training programm
+    Run a training program
     It is specific for a homework
     Could be local training job (fork), could be spark submit job,
     Outputs result file in JSON
@@ -46,23 +49,24 @@ def train_model(proj_id):
     """
     return exec_script(proj_id, "ozon-masters-bigdata/projects", "train.sh", request.json)
 
+
 def exec_script(proj_id, exec_dir, exec_file, request_json):
-    #request_args = json.loads(request_json)
+    # request_args = json.loads(request_json)
     request_args = request_json
     exec_args = [str(proj_id), *request_args]
     exec_path = "{}/{}/{}".format(exec_dir, proj_id, exec_file)
     print("EXEC_PATH", exec_path)
     print("EXEC_ARGS", exec_args)
 
-    #TODO check if exec_path exists
+    # TODO check if exec_path exists
 
-    newpid = os.fork()
-    if newpid == 0:
-       os.execl(exec_path, *exec_args)
+    new_proj_id = os.fork()
+    if new_proj_id == 0:
+        os.execl(exec_path, *exec_args)
     return "Ok\n"    
 
 
-#? upload for checking (test sample is h(proj_id)den)
+# ? upload for checking (test sample is h(proj_id)den)
 
 @app.route('/train_results/<int:proj_id>', methods=['GET'])
 def get_train_result(proj_id):
@@ -91,15 +95,14 @@ def predict(proj_id):
 
 @app.route('/check/<int:proj_id>', methods=['POST'])
 def check(proj_id):
-    """ Run a given programm that calculate model metric on a test data set.
+    """ Run a given program that calculate model metric on a test data set.
     I.e. then run inference job on test data set and save it. 
-    Then cal call a programm that compares their prediction with true values.
+    Then cal call a program that compares their prediction with true values.
 
     How?
-    we can let them run a programm via a sticky bit, so they can run it as superuser, 
+    we can let them run a program via a sticky bit, so they can run it as superuser,
     but won't be able to see the true data.
-    Or
-    we can have a microservice that they call with path to their prediction.
+    Or we can have a microservice that they call with path to their prediction.
 
     Params:
     homework number
@@ -109,7 +112,6 @@ def check(proj_id):
     return
 
 
-
 @app.route('/model/<int:proj_id>', methods=['GET'])
 def get_model_definition(proj_id):
     """Download a file.
@@ -117,7 +119,6 @@ def get_model_definition(proj_id):
 
     Params:
     homework number
-
     """
     path = "{}.joblib".format(proj_id)
     print("MODEL_FILE", path)
@@ -130,7 +131,5 @@ def get_model_definition(proj_id):
     return send_from_directory(full_path, path, as_attachment=True)
 
 
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-
