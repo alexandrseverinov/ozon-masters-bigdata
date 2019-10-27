@@ -22,16 +22,15 @@ model = load("1.joblib")
 
 # read and inference
 read_opts = dict(
-        sep=",", names=fields, index_col=False, header=None,
+        sep="\t", names=fields, index_col=False, header=None,
         iterator=True, chunksize=100
 )
 
 for df in pd.read_csv(sys.stdin, **read_opts):
-    pred = model.predict(df)
-    out = zip(df.doc_id, pred)
+    pred = model.predict_proba(df)
     print(
         "\n".join(
-            [f"{doc_id},{prediction}"
-             for doc_id, prediction in zip(df.doc_id, pred)]
+            [f"{id},{prediction}"
+             for id, prediction in zip(df.id, pred)]
         )
     )

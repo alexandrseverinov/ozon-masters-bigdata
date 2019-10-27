@@ -8,7 +8,13 @@ from sklearn.model_selection import train_test_split, GridSearchCV
 
 # Dataset fields
 numeric_features = ["if" + str(i) for i in range(1, 14)]
-categorical_features = ["cf" + str(i) for i in range(1, 27)] + ["day_number"]
+to_drop_categorical = [20, 1, 22, 10, 21, 12, 11, 23]
+categorical_features = (
+    [
+        "cf" + str(i)
+        for i in range(1, 27) if i not in to_drop_categorical
+    ] + ["day_number"]
+)
 
 fields = ["id", "label"] + numeric_features + categorical_features
 

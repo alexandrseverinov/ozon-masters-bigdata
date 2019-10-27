@@ -30,8 +30,15 @@ except:
 logging.info(f"TRAIN_ID {proj_id}")
 logging.info(f"TRAIN_PATH {train_path}")
 
-read_table_opts = dict(sep="\t", names=fields, index_col=False)
-df = pd.read_table(train_path, **read_table_opts)
+numeric_features = ["if" + str(i) for i in range(1, 14)]
+categorical_features = ["cf" + str(i) for i in range(1, 27)] + ["day_number"]
+
+fields_full = ["id", "label"] + numeric_features + categorical_features
+
+read_table_opts = dict(sep="\t", names=fields_full, index_col=False)
+df = pd.read_csv(train_path, **read_table_opts)[fields]
+
+fields = df.columns
 
 # split train/test
 X_train, X_test, y_train, y_test = train_test_split(
@@ -47,3 +54,4 @@ logging.info(f"model score: {model_score:.3f}")
 
 # save the model
 dump(model, "{}.joblib".format(proj_id))
+logging.info("model saved")
