@@ -8,5 +8,5 @@ def filter_cond(line_dict):
            20 < int(line_dict["if1"]) < 40
         )
     else:
-        return False
+        return True
     return True if cond_match else False
