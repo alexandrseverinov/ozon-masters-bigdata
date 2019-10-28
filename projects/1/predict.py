@@ -34,14 +34,14 @@ fields = ["id"] + numeric_features + categorical_features
 # read and inference
 read_opts = dict(
         sep="\t", names=fields_full, index_col=False, header=None,
-        iterator=True, chunksize=100
+        iterator=True, chunksize=200
 )
 
 for df in pd.read_csv(sys.stdin, **read_opts):
-    pred = model.predict_proba(df[fields])
+    pred = model.predict_proba(df[fields])[:, 1]
     print(
         "\n".join(
-            [f"{id},{prediction}"
-             for id, prediction in zip(df.id, pred)]
+            ["{rec_id},{prediction}".format(rec_id=i[0], prediction=i[1])
+             for i in zip(df.id, pred)]
         )
     )

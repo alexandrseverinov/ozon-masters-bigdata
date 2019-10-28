@@ -53,10 +53,10 @@ for line in sys.stdin:
         continue
 
     # unpack into a tuple/dict
-    values = line.rstrip().split(',')
-    hotel_record = dict(zip(fields, values))
+    values = line.rstrip().split('\t')
+    record = dict(zip(fields, values))
 
     # apply filter conditions
-    if filter_cond(hotel_record):
-        output = ",".join([hotel_record[x] for x in outfields])
+    if filter_cond(record):
+        output = "\t".join([record[x] for x in outfields])
         print(output)
