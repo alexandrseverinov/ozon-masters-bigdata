@@ -21,21 +21,29 @@ n_records = 0
 prev_key = None
 values = []
 
+
+def logloss(true_label, predicted, eps=1e-15):
+    p = max(eps, min(predicted, 1 - eps))
+    if true_label == 1:
+        return p
+    return 1 - p
+
+
 for line in sys.stdin:
     key, value = line.strip().split(",")
 
     if key != prev_key and prev_key is not None:
-        score += math.fabs(values[0] - values[1])
+        score += logloss(values[0], values[1])
         n_records += 1
         values = []
     values.append(float(value))
     prev_key = key
 
 if prev_key is not None:
-    score += math.fabs(values[0] - values[1])
+    score += logloss(values[0], values[1])
     n_records += 1
 
-score /= n_records
+score = -math.log(score)
 
 print(score)
 
