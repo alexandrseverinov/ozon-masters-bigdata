@@ -6,7 +6,6 @@ from glob import glob
 import logging
 
 sys.path.append('.')
-from model import fields
 from filter_cond import filter_cond
 
 
@@ -29,6 +28,16 @@ exec(open(filter_cond_files[0]).read())
 # Optional argument
 # If +field option is given, output the id (always first record) and the given field
 # if -field is given, output all but the given field
+
+numeric_features = ["if" + str(i) for i in range(1, 14)]
+to_drop_categorical = [20, 1, 22, 10, 21, 12, 11, 23]
+categorical_features = (
+    [
+        "cf" + str(i)
+        for i in range(1, 27) if i not in to_drop_categorical
+    ] + ["day_number"]
+)
+fields = ["id"] + numeric_features + categorical_features
 
 if len(sys.argv) == 1:
     # by default print all fields
