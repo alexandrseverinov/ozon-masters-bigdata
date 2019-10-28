@@ -41,7 +41,7 @@ else:
     if op not in "+-" or field not in fields:
         logging.critical("The optional argument must start with + or - followed by a valid field")
         sys.exit(1)
-    elif op == '+':
+    elif op == "+":
         outfields = [fields[0], field]
     else:
         outfields = list(fields)  # like deepcopy, but on the first level only!
@@ -53,7 +53,7 @@ for line in sys.stdin:
         continue
 
     # unpack into a tuple/dict
-    values = line.rstrip().split('\t')
+    values = line.rstrip().split("\t")
     record = dict(zip(fields, values))
 
     # apply filter conditions

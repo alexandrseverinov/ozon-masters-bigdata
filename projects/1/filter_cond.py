@@ -3,7 +3,10 @@ def filter_cond(line_dict):
     Takes a dict with field names as argument
     Returns True if conditions are satisfied
     """
-    cond_match = (
-       20 < int(line_dict["if1"]) < 40
-    ) 
+    if line_dict["if1"] != "":
+        cond_match = (
+           20 < int(line_dict["if1"]) < 40
+        )
+    else:
+        return False
     return True if cond_match else False
